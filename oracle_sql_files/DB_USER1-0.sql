@@ -1,0 +1,40 @@
+
+-- 1. BEFORE GRANT
+SELECT * FROM DEV_USER.LOCATION_DTLS; -- ERROR TABLE DOES NOT EXIST
+
+-- 3. AFTER GRANT
+SELECT * FROM DEV_USER.LOCATION_DTLS; -- IT WORKS :)
+
+DESC DEV_USER.LOCATION_DTLS;
+
+
+-- CREATING A TABLE IN DB_USER1
+
+CREATE TABLE STUDENT1(
+    ROLL_NO NUMBER(2) PRIMARY KEY,
+    SNAME VARCHAR2(20),
+    PHONE_NUMBER NUMBER(10)
+);
+
+DESC STUDENT1;
+
+-- 4.
+INSERT INTO STUDENT1 VALUES(1, 'RAJIV', NULL);
+INSERT INTO STUDENT1 VALUES(2, 'JAYANT', 8090345678);
+INSERT INTO STUDENT1 VALUES(3, 'RAJIV', 8890543710);
+
+GRANT SELECT ON STUDENT1 TO DEV_USER;
+
+SELECT * FROM STUDENT1;
+
+
+SELECT TABLE_NAME FROM ALL_TABLES;
+
+
+-- to see which previous privilages assigned by whom, Grantee, Grantor, and privilage
+select * from user_tab_privs_made;
+
+-- to see which privilages recieved before this.
+-- which privilages i accepted from others.
+select * from user_tab_privs_recd;
+

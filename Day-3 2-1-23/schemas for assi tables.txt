@@ -1,0 +1,106 @@
+
+SHIPPERS
+
+Name        Null?    Type         
+----------- -------- ------------ 
+SHIPPERID   NOT NULL NUMBER(38)   
+COMPANYNAME NOT NULL VARCHAR2(40) 
+PHONE                VARCHAR2(24) 
+
+SUPPLIERS
+
+Name         Null?    Type           
+------------ -------- -------------- 
+SUPPLIERID   NOT NULL NUMBER(38)     
+COMPANYNAME  NOT NULL VARCHAR2(40)   
+CONTACTNAME           VARCHAR2(30)   
+CONTACTTITLE          VARCHAR2(30)   
+ADDRESS               VARCHAR2(60)   
+CITY                  VARCHAR2(15)   
+REGION                VARCHAR2(15)   
+POSTALCODE            VARCHAR2(10)   
+COUNTRY               VARCHAR2(15)   
+PHONE                 VARCHAR2(24)   
+FAX                   VARCHAR2(24)   
+HOMEPAGE              VARCHAR2(2000) 
+
+CUSTOMERS
+
+Name         Null?    Type         
+------------ -------- ------------ 
+CUSTOMERID   NOT NULL CHAR(5)      
+COMPANYNAME  NOT NULL VARCHAR2(40) 
+CONTACTNAME           VARCHAR2(30) 
+CONTACTTITLE          VARCHAR2(30) 
+ADDRESS               VARCHAR2(60) 
+CITY                  VARCHAR2(15) 
+REGION                VARCHAR2(15) 
+POSTALCODE            VARCHAR2(10) 
+COUNTRY               VARCHAR2(15) 
+PHONE                 VARCHAR2(24) 
+FAX                   VARCHAR2(24) 
+
+
+EMPLOYEES
+Name            Null?    Type          
+--------------- -------- ------------- 
+EMPLOYEEID      NOT NULL NUMBER(38)    
+LASTNAME        NOT NULL VARCHAR2(20)  
+FIRSTNAME       NOT NULL VARCHAR2(10)  
+TITLE                    VARCHAR2(30)  
+TITLEOFCOURTESY          VARCHAR2(25)  
+BIRTHDATE                DATE          
+HIREDATE                 DATE          
+ADDRESS                  VARCHAR2(60)  
+CITY            NOT NULL VARCHAR2(20)  
+REGION                   VARCHAR2(15)  
+POSTALCODE               VARCHAR2(10)  
+COUNTRY                  VARCHAR2(15)  
+HOMEPHONE                VARCHAR2(24)  
+EXTENSION                VARCHAR2(4)   
+PHOTO                    BLOB          
+NOTES                    CLOB          
+REPORTSTO                NUMBER(38)    
+PHOTOPATH
+
+
+ORDERS
+                VARCHAR2(255) 
+Name           Null?    Type         
+-------------- -------- ------------ 
+ORDERID        NOT NULL NUMBER(38)   
+CUSTOMERID              CHAR(5)      
+EMPLOYEEID              NUMBER(38)   
+ORDERDATE               DATE         
+REQUIREDDATE            DATE         
+SHIPPEDDATE             DATE         
+SHIPVIA                 NUMBER(38)   
+FREIGHT                 NUMBER(12,2) 
+SHIPNAME                VARCHAR2(40) 
+SHIPADDRESS             VARCHAR2(60) 
+SHIPCITY                VARCHAR2(15) 
+SHIPREGION              VARCHAR2(15) 
+SHIPPOSTALCODE          VARCHAR2(10) 
+SHIPCOUNTRY             VARCHAR2(15) 
+
+
+ORDER_DETAILS
+
+Name      Null?    Type         
+--------- -------- ------------ 
+ORDERID   NOT NULL NUMBER(38)   
+PRODUCTID NOT NULL NUMBER(38)   
+UNITPRICE          NUMBER(12,2) 
+QUANTITY           NUMBER(38)   
+DISCOUNT           FLOAT(63)    
+
+
+
+
+10396
+
+
+10543
+
+
+

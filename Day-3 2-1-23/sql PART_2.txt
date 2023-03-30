@@ -1,0 +1,560 @@
+
+
+Conditional Expressions
+----------------------------
+
+
+To incorporate if-else logic within SQL query
+
+- CASE Expression
+	Simple Case Expression
+	Searched Case Expression
+
+- DECODE Function			Alternative for simple case expression
+
+
+COMBINING DATA
+------------------
+
+
+set operators
+	combine the output on multiple queries
+
+Joins
+	display together data from multiple tables
+
+the cartesian product is really
+a cross-join which returns all the rows in all the tables listed in a query: 
+each row in the first table is paired with all the rows in the second table.
+ This happens when there is no relationship defined between the two tables.
+
+Set Operators
+		- Combine the output of multiple queries
+
+	- UNION - All rows selected by both the queries, excluding dup
+	- UNION ALL - All rows selected  by both the queries;including dup
+	- INTERSECT - all the rows common in both the queries output
+	- MINUS - All rows selected by first query but not by second query
+
+Guidelines - 
+ - Output will be sorted based on first column in the result; except in case of UNION ALL
+ - Number of column selected by all the queries and their data type should match. 
+column names can be different.
+Column names from the 1st query will appear in result set
+
+syntax-
+select col1, col5 from table1
+set operator
+select col2, col5 from tbl2
+
+output
+	names : Col1, Col5
+
+Joins
+-------
+		- Combine the data from multiple tables
+
+
+Inner Join
+		basic syntax
+		ANSI stnd syntax
+Cartesian product - if forgot the where clause and in from clause there are 2 tables then it performs the cartesian product internally
+output is as per - each row with all rows of other table
+Natural Join
+Self Join
+Outer Join
+
+
+OUTER JOIN
+
+	display matched as well as unmatched data
+
+	Oracle prop
+			(+)
+	ANSI standard
+			LEFT OUTER JOIN
+			RIGHT OUTER JOIN
+			FULL OUTER JOIN
+
+Self Join
+
+Joining a table to itself
+
+
+
+	Emp id	Name	Manager id
+	1	AAA		null
+	2	Shubhangi	1
+	3	Kalyani		2
+
+
+
+
+Subqueries
+-------------
+
+
+
+Query within query
+Query embedded within a clause of another query
+
+
+Nested subquery
+	- Inner query executes first
+	- Output of inner query -> as input to Outer query
+	- Outer query executes
+
+
+ Single row subquery
+	Inner query returns single value
+	single row operators	= > < >= <= etc
+
+ Multiple row subquery
+	Inner query returns more than one value
+	Multiple row operators	IN, NOT IN, ANY, ALL
+
+
+Places where user can embedd subquery
+
+Where clause .. select stmt
+Having clause .. select stmt
+FROM clause .. select stmt
+
+(****)
+Instead of Values clause of Insert statemet
+Set clause of Update statement
+Where clause of update statement
+Where clause of Delete statement
+
+Create table stmt
+
+
+
+
+select ........
+From ( subquery )
+
+Subquery in FROM clause - INLINE View/virtual table 
+
+
+
+Correlated Subquery
+
+	- Outer query executes first
+	- Inner query will execute for each row returned by outer query
+	- Inner query contains some column from outer queries table
+
+
+= > < >= <=
+
+EXISTS, NOT EXISTS -> correlated subquery operator
+
+
+TCL statements
+-------------------
+
+
+Transaction Control Language
+
+
+Database Transaction
+
+		Series of operations performed on the database
+
+	starts with	1st DML statement
+	Ends
+			Commit, Rollback
+			DDL or DCL statement	 Auto Commit
+
+
+TCL stmts
+
+COMMIT - Saves the changes to the database. Ends the transaction.
+ROLLBACK - undo the changes. Ends the transaction.
+SAVEPOINT - marker point within the transaction.
+-- upto save point transaction canget rolled back
+
+Connect db1
+
+Select .......
+Insert .........transaction starts
+Update
+delete
+select
+insert
+select
+update
+delete
+
+--Commit    ...... transaction end (all work get saved)
+
+Rollback  ...... for undo
+
+Select
+Update	...........new transaction will get start
+delete
+	Savepoint s1
+select
+insert
+delete
+	Savepoint S2
+select
+update
+	savepoint s3
+
+
+Rollback to S2 .... will undo the DML statements till savepoint s2
+earlier changes of s2 will remain as it is / saved in db
+
+commit	 .. no savepoint concept for commit. once commited, no rollback effect
+	
+
+
+1 Insert			- Transaction starts
+2 Update
+3 select
+savepoint s1
+4 Insert
+5 delete
+savepoint s2
+6 select
+7 insert
+8 update
+9 create table emp_backup as select * from employee	- Auto commit Transaction ends - Auto commit
+10 select				
+11 insert				-- transction starts here
+savepoint s3
+12 update
+13 delete
+
+	--Rollback	(undo statment 11,12,13)
+	--Rollback to s3 (Undo statement 12,13)
+	Rollback to s2 ( error - S2 does not exist )
+
+Once committed user can not rollback
+Once committed all the earlier savepoints in the transaction will be erased from the memory
+
+
+State of the data before commit or rollback ( in case of DML used and not the committed not the rollback)
+
+1. Previous state of the data can be restored
+
+State of the data after Commit
+
+1. data changes are saved in the database
+2. Previous state of the data is lost ( once committed user can not rollback)
+3. Savepoints within the transaction will be erased
+
+State of the data after Rollback
+1. Changes are undone.
+2. Previous state of the data is restored.
+
+
+DCL statements
+------------------------
+
+DCL
+Data Control Language
+
+to control the access to the data or to the database
+
+	GRANT - to provide the privileges to other users
+	REVOKE - to remove the privileges from other users
+
+
+GRANT - 
+	2 types of privileges
+		Object privileges
+		System privileges
+
+	Object privileges - related to existing objects in the database
+		Obj : Table, View, Procedure,  Function etc..
+		Privil : SELECT , Insert, Update, Delete, Execute etc
+	Syntax : 
+		GRANT privileges ON Object TO User [ With Grant option ]
+
+		GRANT select on Emp to User1
+		GRANT select, insert, update On Dept to User2
+		Grant select on Dept, products to U1, U2, U4; (notwork)
+		
+		Grantor : who assigns the privileges
+		Grantee : to whom the privileges are assigned
+
+Note - person who creates the object will become the owner of the object.
+Owner can assign the priviledges	
+we can not assign on multiple objects together 
+	
+		connect db_user
+			Grant select on Emp to User2 with Grant option
+
+		Connect User2
+			select * from db_user.Emp
+			grant select on db_user.Emp to User3
+
+
+select * From user_tab_privs_made
+select * From user_tab_privs_recd
+
+
+		System privileges
+			is the right to perform a particular action the database
+
+			Create any table, alter any table, drop any table
+			Create any view, drop any view
+			Create any index, create any trigger, drop any trigger
+			etc
+
+		Syntax
+			Grant privileges TO User [ with admin option]
+			Grant create any table, create any view to Usr1
+			Grant create any procedure to U1, U2, U4, U6;
+
+			grant  create any trigger to User1 with admin option
+
+
+
+REVOKE
+
+	to ungrant to remove the privileges which are assigned
+
+		Syntax
+			Object
+				Revoke privileges On Obj From User
+				Revoke select on Emp from User2
+			System
+				Revoke privileges From User
+				Revoke create any view from Usr1;
+
+
+- revoke object privs from users / Roles
+- revoke system privs from users / roles
+- Revoke Roles from Users
+
+
+db_user
+	grant select on dept to User1 with grant option
+user1
+	select * from db_user.dept
+	grant select on db_user.dept to User2 with grant option
+
+User2	
+	grant select on db_user.dept to User.3,User4 with grant option	
+
+User3
+	grant select on db_user.dept to User5 with grant option	
+
+db_user -> user1 -> user2 -> user3,user4 -> user5
+
+
+db_user
+	revoke Select on dept from User1
+
+
+Cascading of revoke
+	- will happen in case of object privileges assigned using With Grant option
+	- will not happen in case of syetem privileges assigned using with admin option
+
+Role
+------
+
+	group of privileges
+
+Create Role Role_name
+Create Role Role1
+
+
+Grant select on Emp, location to Role1
+Grant insert on dept, order to Role1
+Grant update on Emp, dept, location, product to Role1
+Grant create any table , create any index, create any view to Role1
+
+	Grant Role1 to User1
+	
+	Grant Role1, Role2 to User2
+	Grant Role1 to User1, USer5, u1
+
+
+select * From role_tab_privs
+	-- revoke role from user
+	Revoke Role1 from User1
+		
+	- revoke privileges from role
+	Revoke select on location from Role1
+
+
+VIEW
+SEQUENCE
+INDEX
+SYNONYM
+
+
+
+
+View
+-----
+
+Virtual table / Logical table
+Snapshot of table
+like a window thru which we can see the data in the table
+wont contain any physical data
+
+
+Create View viewName as
+select query ...........                 
+
+
+Advantages
+- to make simple queries to retrieve the output of complicated queries
+- One view can be used to fetch data from multiple tables
+- provide set of users access to specific data as per their requirement/skill
+
+Corporate
+-----------
+	Employee	60 columns
+
+	Create View Emp_fin_view as
+		select ..... 15 columns from Employee
+
+	Grant select on Emp_fin_view to Fin_user
+
+	Create View Emp_mkr_view as
+		select ..... 10 columns from Employee
+
+Fin_user
+---------
+
+mrket_user
+----------
+
+HR_user
+-------
+
+
+Create View emp_dept_loc_view
+as 
+select employeeid, firstname, lastname, job_id, salary, department_name, city
+from Employee E
+join Department D
+on E.department_id=D.department_id
+join location_dtls L
+on d.locationid= l.locationid
+
+select * from emp_dept_loc_view
+
+select * from user_views
+
+Create or replace View emp_dept_loc_view
+as 
+select employeeid, firstname, lastname, job_id, salary, manager_id, email, 
+department_name, city
+from Employee E
+join Department D
+on E.department_id=D.department_id
+join location_dtls L
+on d.locationid= l.locationid
+
+Drop view viewname
+
+Simple view
+
+Complex View
+
+
+SEQUENCE
+--------
+
+ user created DB object
+ to generate unique integers
+ to populate primary key column
+
+
+to generate values from the sequence
+
+	NEXTVAL - generates and returns the next available unique integer
+	CURRVAL - will display last generated value by the sequence
+
+	sequence_name.NEXTVAL
+
+CREATE SEQUENCE seq_generator_6420
+  START WITH 1
+  INCREMENT BY 1
+  MAXVALUE 10
+  --CYCLE / NOCYCLE
+  
+  -- Data dictionary table
+  select * from user_sequences
+  
+select seq_generator_6420.NEXTVAL from dual
+
+select seq_generator_6420.CURRVAL from dual
+
+ALTER sequence seq_generator_6420
+MAXVALUE 10000000
+
+Insert into dept_new 
+Values(seq_generator_6420.NEXTVAL, '&Department_name',&Location_id)
+
+select * from dept_new
+
+drop sequence sequenceName  
+
+
+
+
+INDEX
+------
+
+speed up the retrieval of data from the tables
+can be created explicitly or automatically
+is used and maintained by the oracle server automatically
+When user drops a table, all the indexes on that table will be removed
+
+	Create Index ind_name On Table_name( column )
+
+	Create index ix_jobid On Employee(job_id)
+
+Primary / Unique constraint - Automatically index will be available
+
+
+select * from employee
+Where job_id='HR';
+
+select .... from Employee
+Where department_id=
+
+Where salary >   <
+
+Where manager_id=
+
+select * From employee
+Where job_id= 'IT_REP'
+
+drop index index_name
+
+select * from user_indexes
+
+select * from user_ind_columns
+Where table_name='EMPLOYEE'
+
+
+SYNONYM
+---------
+
+an alternative name for any Database object
+
+Create Synonym s_name For Object_name
+
+create Synonym ED_View for Emp_Dept_loc_view_NEW
+
+	- for lengthy object names
+	- to make it easy to access objects owned by other users
+
+dbsql
+	location_dtls
+
+db_user
+	select * from dbsql.location_dtls
+	
+	create synonym dbloc for dbsql.location_dtls
+
+	select * from dbloc

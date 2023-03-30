@@ -1,0 +1,12 @@
+
+Execute all DDL and DML scripts in the below sequence
+
+1. categories
+2. Shippers
+3. customers
+4. Employees
+5. suppliers
+6. products
+7. orders
+8. Order_details
+

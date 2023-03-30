@@ -1,0 +1,574 @@
+--subquery -> one query is embedded in another query  
+
+--single row subquery 
+
+select * from Employee 
+
+Where salary > (select salary from Employee 
+
+                        Where firstname='Pavi'); 
+
+                         
+
+                         
+
+--find emp whose job id same as robin's job id    
+
+  
+
+select * from Employee 
+
+Where job_id = ( select job_id from employee 
+
+                  Where firstname='robin'); 
+
+                   
+
+--display emp details whose salary is more than highest salary paid employee of department is 20 
+
+  
+
+select * from Employee 
+
+Where salary > ( select max(salary) from Employee 
+
+                  Where department_id=20); 
+
+                   
+
+                
+
+--multiple row subquery 
+
+  
+
+--Display all emp dtls whose salary is same  
+
+--as minimum salary in each department    
+
+  
+
+select * from Employee 
+
+Where Salary IN (  
+
+                  select min(salary) 
+
+                  from Employee 
+
+                  group by department_id); 
+
+                   
+
+                   
+
+--Display all employee details which are located in Pune 
+
+--located in pune 
+
+  
+
+select locationid from location_dtls where city='Pune'; --single line subquery 
+
+  
+
+  
+
+--search locationid in department's table 
+
+select department_id from department 
+
+                    Where locationid in ( select locationid  
+
+                                          from location_dtls  
+
+                                          where city='Pune'); -- multiple line subquery 
+
+    
+
+                                           
+
+--now locate dept_id in employee table to get matching records 
+
+select * from Employee 
+
+Where department_id IN (  
+
+                    select department_id from department 
+
+                    Where locationid in ( select locationid  
+
+                                          from location_dtls  
+
+                                          where city='Pune')); 
+
+  
+
+  
+
+  
+
+--Display all employee details whose salary is  
+
+--greater than any of the employees in department 20 
+
+  
+
+select * from employee 
+
+Where Salary > any (  
+
+                select salary from employee 
+
+                  where department_id=30); 
+
+-- error without any ->as returning multiple rows and using > symbol which is for single row 
+
+  
+
+  
+
+  
+
+  
+
+--Display all employee details whose salary is  
+
+--greater than salary of all the employees in department 20 
+
+  
+
+select * from employee 
+
+Where Salary >ALL (  
+
+                  select salary from employee 
+
+                  where department_id=20); 
+
+  
+
+--or without 'All' 
+
+-- can use comparision operator with 'any' and 'all' 
+
+select * from employee 
+
+Where Salary > (  
+
+                  select max(salary) from employee 
+
+                  where department_id=20);  -- if max() is not used then it will return error 
+
+                  --as innermost query returning multiple values and there is use of comparision operator 
+
+                   
+
+                   
+
+  
+
+  
+
+--subquery in from clause 
+
+--groupwise how many employee 
+
+select Groupnumber, count(*) 
+
+from ( 
+
+        select Employeeid, job_id, department_id, 
+
+        case  
+
+         when department_id=10 then 'Group1' 
+
+         when department_id=20 then 'Group2' 
+
+        else 'Group3' 
+
+        End as groupNumber 
+
+        from Employee 
+
+        )A -- virtual table 
+
+group by groupnumber; 
+
+  
+
+connect db_user; 
+
+  
+
+--Display all employee details  
+
+--along with corresponding department s average salary 
+
+  
+
+select E.employeeid, e.firstname, e.job_id, e.department_id, e.salary, 
+
+D.avg_salary 
+
+from Employee E,   (select department_id, avg(salary) as avg_salary 
+
+                    from Employee 
+
+                    group by department_id --considered as virtual table 
+
+                    ) D 
+
+Where E.department_id=D.department_id; 
+
+  
+
+--Display all emp dtls who earn same as minimum salary  
+
+--in their own department 
+
+  
+
+-- Correlated Subquery 
+
+  select * From Employee Emp 
+ 
+  Where Emp.salary = ( select min(salary) from Employee M 
+
+                        Where M.department_id =Emp.department_id); 
+
+  working: (my own)
+  
+		1. get data from outer query
+		2. execute it
+		3. use it
+		4. got to step 1. again till all rows finished in outer query.
+		
+	observation (my own) : it does brute force approach right ??
+
+--nested in from clause 
+
+select E.employeeid, e.firstname, e.job_id, e.department_id, e.salary, 
+
+D.Min_Salary 
+
+from Employee E,   (select department_id, min(salary) as min_salary 
+
+                    from Employee 
+
+                    group by department_id ) D 
+
+Where E.department_id=D.department_id 
+
+and E.salary = D.min_Salary; 
+
+  
+
+--Display all emp dtls who salary is greater  than their own department average salary 
+
+--above nested query can be convert into correlated as below 
+
+--correlated 
+
+  
+
+select * 
+
+from Employee E 
+
+Where E.salary > ( select Avg(salary) from Employee D 
+
+                    Where D.department_id=E.department_id); 
+
+  
+
+--Display all emp dtls who salary is greater  than their own job profiles average salary 
+
+  
+
+Select * from Employee E 
+
+Where E.salary > ( select avg(salary) from Employee D 
+
+                    Where E.job_id=D.job_id); 
+
+  
+
+select * from department; 
+
+select * from employee; 
+
+--display the department whose emp are null or don't have employee in the department 
+
+--correlated 
+
+select * from department D 
+
+Where NOT EXISTS ( select * from Employee E 
+
+                     Where E.department_id=D.department_id); 
+
+  
+
+-- Nested 
+
+select * from department D 
+
+Where department_id not in ( select department_id from Employee 
+
+                                where department_id is not null ); 
+
+                                 
+
+                                 
+
+                                 
+
+                              
+
+--use of subquery in insert statement 
+
+  
+
+create table dept_new(department_id number(2) primary key, department_name varchar2(20)); 
+
+-- insert without 'values' keyword  
+
+Insert into dept_new(department_id, department_name) 
+
+select department_id, department_name 
+
+from Department 
+
+Where locationid=1; 
+
+  
+
+select * from dept_new; 
+
+  
+
+--subquery with update 
+
+  
+
+--Modify the location of Johns department as Benglore (2) 
+
+select * from department; 
+
+select * from location_dtls; 
+
+select * from employee; 
+
+  
+
+Update department 
+
+Set locationid=  ( select locationid from location_dtls where city='Pune') 
+
+Where department_id= ( select department_id from Employee Where firstname='John'); 
+
+  
+
+  
+
+-- subquery with delete  
+
+  
+
+--Delete all the department details located in chennai 
+
+  
+
+delete from department 
+
+Where locationid= ( select locationid from location_Dtls where city='Pune'); 
+
+select * from department; 
+
+  
+
+  
+
+-- subquery with create table 
+
+  
+
+Create table emp_details_table1 as 
+
+select Employeeid, firstname, salary, job_id, manager_id, E.Department_id, 
+
+Department_name 
+
+from Employee E JOIN Department D 
+
+On E.department_id=D.department_id 
+
+and d.department_id in (10,20); 
+
+  
+
+desc emp_details_table1; 
+
+  
+
+  
+
+  
+
+--Module 9 - other db object  
+
+Create view emp_details_view as 
+
+select Employeeid, firstname, salary, job_id, manager_id, E.Department_id, 
+
+Department_name 
+
+from Employee E JOIN Department D 
+
+On E.department_id=D.department_id 
+
+and d.department_id in (10,20,50); 
+
+  
+
+select * from emp_details_view; -- view created with all values as it is of table. the data is not physically stored. 
+
+  
+
+select * from user_views; -- just to get created views 
+
+  
+
+select * from user_tables; 
+
+--create a view to get emplyoee name, department name, city 
+
+Create or replace View emp_dept_loc_view 
+
+as  
+
+select employeeid, firstname, lastname, job_id, salary, manager_id, email,  
+
+department_name, city 
+
+from Employee E 
+
+join Department D 
+
+on E.department_id=D.department_id 
+
+join location_dtls L 
+
+on d.locationid= l.locationid; 
+
+select * from emp_dept_loc_view; 
+
+drop view emp_details_view; 
+
+  
+
+select * from user_views; 
+
+  
+
+drop sequence seq_generator_6420; 
+
+--create sequence 
+
+CREATE SEQUENCE seq_generator_29 
+
+  START WITH 1 
+
+  INCREMENT BY 1 
+
+  MAXVALUE 10; 
+
+  
+
+  
+
+select seq_generator_29.NEXTVAL from dual; --shows next value (NEXTVAL - psudo column) 
+
+  
+
+  
+
+select seq_generator_29.CURRVAL from dual; --shows last generated value 
+
+  
+
+select * from user_sequences; 
+
+--we can alter the max value but not start_value 
+
+  
+
+ALTER sequence seq_generator_29 
+
+MAXVALUE 100; 
+
+--use of sequnces in tables 
+
+truncate table dept_new; 
+
+desc dept_new; 
+
+Insert into dept_new  
+
+Values(seq_generator_29.NEXTVAL, '&Department_name'); 
+
+  
+
+select * from dept_new; 
+
+  
+
+--  INDEXES 
+
+-- have index memory area and works as per filteration  
+
+select * from Employee 
+
+where job_id='HR'; -- automatic index applied 
+
+-- internaly there is pointer between actual table memory area and index memory area. index pointer will point to specific 
+
+  
+
+Create index ix_jobid On Employee(job_id); 
+
+  
+
+select * from user_indexes; 
+
+  
+
+  
+
+select * from user_ind_columns 
+
+Where table_name='EMPLOYEE'; 
+
+  
+
+  
+
+----Synonym  -- create another name for any db object 
+
+desc location_dtls; 
+
+connect db_user; 
+
+create synonym dbloc for db_user.location_dtls;  -- give error as sys admin provide priviledge 
+
+     
+
+create synonym dbloc for emp_dept_loc_view; 
+
+  
+
+select * from user_synonyms; 
+
+ 

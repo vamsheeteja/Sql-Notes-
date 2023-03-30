@@ -1,0 +1,30 @@
+Assignment -2
+
+1) What is `NPM`?
+NPM has many names. It is a package manager. Whenever we are building a react application, to make it more powerful our application would (need) depend on many different packages. And infact those packages depend on other packages. So the part of downloading and maintaining these WHOLE BUNCH of packages is carried out by NPM..thus making life of developer `Easy`.
+
+
+2) What is `Parcel/Webpack`? Why do we need it?
+`Parcel/Webpack` are BUNDLERS.
+- Bundler is a development tool that combines many js code files into a single one that is production-ready loadable in the browser.
+- fantastic feature is - it generates a dependency graph as it traverses your first code files.
+- These have abstracted the pain of tooling and provide an optimized and performance-centric solution to generate static assets.(js file/css file/images that dont change at server)
+
+Pros: 
+* easy to set up
+* code tranformation
+* Code splitting - provide an easy solution to split code into various bundles based on size or dynamic import syntax.
+* production-builds - provide a well-thought solution to generate a production-ready build.
+* Expandable - easy to add plugins to extend the tooling functionality sush as babel tranformation plugin to support the latest ES2020 syntax, jsx syntax, and more.
+* Native support of IMPORT
+* HMR- Hot Module Replacement - Update module change automatically in the browser without a full reload
+* Friendly error loggin - in case of any compiler error, pin point code frame.
+and many more.
+
+3) What is `.parcel-cache`?
+The cache folder stores information about the project when Parcel builds it, so 
+that when it rebuilds, it doesn't have to re-parse and re-analyze everything from scratch.
+- this the reason why parcel can be so Fast in dev mode.
+
+comitting it to git is BAD idea. 
+

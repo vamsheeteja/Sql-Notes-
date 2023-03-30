@@ -1,0 +1,29 @@
+
+
+- Go to Dos prompt
+> SQLPlus
+
+SQL> connect Sys as sysdba
+Password : < whatever you created while installing oracle express edition>
+
+Execute below command . You can change the db_user with whatever username you want
+
+CREATE USER db_user
+IDENTIFIED BY db_user
+DEFAULT TABLESPACE USERS 
+TEMPORARY TABLESPACE TEMP 
+PROFILE DEFAULT 
+ACCOUNT UNLOCK ;
+  -- 2 Roles for db_user
+  GRANT RESOURCE TO db_user;
+  GRANT CONNECT TO db_user;
+  ALTER USER db_user DEFAULT ROLE ALL;
+  -- 6 System Privileges for db_user
+  GRANT CREATE PROCEDURE TO db_user;
+  GRANT CREATE TABLE TO db_user;
+  GRANT CREATE TRIGGER TO db_user;
+  GRANT CREATE SEQUENCE TO db_user;
+  GRANT CREATE VIEW TO db_user;
+  GRANT UNLIMITED TABLESPACE TO db_user;
+
+

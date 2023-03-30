@@ -1,0 +1,8 @@
+
+Execute commands from below files in sequence
+1. Location_DDL
+2. LOCATION_DTLS_insert
+3. Department_DDL
+4. Department_insert
+5. Employee_DDL
+6. Employee_Insert

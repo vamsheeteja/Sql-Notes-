@@ -1,0 +1,5 @@
+
+  CREATE TABLE "LOCATION_DTLS" 
+   (	"LOCATIONID" NUMBER(4,0) Primary key, 
+	"CITY" VARCHAR2(50)
+   )

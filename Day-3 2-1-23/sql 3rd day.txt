@@ -1,0 +1,417 @@
+select * from Department; 
+
+  
+
+select * from employee; 
+
+  
+
+select * from location_dtls; 
+
+  
+
+--inner join 
+
+select Employeeid, firstname, lastname, manager_id, salary, job_id,department_name 
+
+From Employee, Department 
+
+Where Employee.Department_id=Department.Department_id; 
+
+  
+
+select department_name, city 
+
+from Department D, location_dtls L 
+
+where D.locationid=L.locationid; 
+
+  
+
+-- use of table alias 
+
+select E.Employeeid, E.firstname, E.lastname, E.manager_id, E.salary, E.job_id,D.department_name 
+
+From Employee E, Department D 
+
+Where E.Department_id=D.Department_id 
+
+and D.department_id=10;   
+
+  
+
+-- can join more than 2 tables 
+
+select 
+
+E.Employeeid, E.firstname, E.lastname, E.manager_id, E.salary, job_id, D.department_name, 
+
+L.city 
+
+From Employee E, Department D, Location_dtls L 
+
+Where E.Department_id=D.Department_id 
+
+and D.locationid=L.locationid 
+
+and L.city='GOA'; 
+
+--and d.department_id=20; 
+
+select * from Location_dtls; 
+
+  
+
+  
+
+  
+
+-- ANSI standard (join - on) 
+
+select 
+
+E.Employeeid, E.firstname, E.lastname, E.manager_id, E.salary, job_id, D.department_name 
+
+From Employee E JOIN Department D 
+
+ON E.Department_id=D.Department_id 
+
+where d.department_name='HR1'; 
+
+  
+
+--nested in-join 
+
+select 
+
+Employeeid, firstname, lastname, manager_id, salary, job_id, D.department_name, L.city 
+
+From Employee E  
+
+JOIN Department D 
+
+ON E.Department_id=D.Department_id 
+
+JOIN Location_dtls L 
+
+ON D.locationid=L.locationid; 
+
+  
+
+--inner join, natural join, simple join, basic join are the same 
+
+  
+
+-- Cartesian product (Not preferred) 
+
+select 
+
+Employeeid, firstname, lastname, manager_id, salary, job_id, department_name 
+
+From Employee, Department; 
+
+--9 X 5 =45 
+
+  
+
+  
+
+-- Natural join ( Inner Join only) 
+
+select 
+
+Employeeid, firstname, lastname, manager_id, salary, job_id, department_name 
+
+From Employee E NATURAL JOIN Department D; 
+
+  
+
+--using natural join if there is any common column then automatically inner join performed on those tables common col. 
+
+--using natural join if there is no any common column bet 2 tables then cartesian product applied 
+
+select 
+
+Employeeid, firstname, lastname, manager_id, salary, job_id--, department_name 
+
+From Employee E NATURAL JOIN Location_dtls l; 
+
+  
+
+  
+
+--left outer join  -each record from L.H.S. side table displayed +mached 
+
+select 
+
+Employeeid, firstname, lastname, manager_id, salary, job_id, D.department_name 
+
+From Employee E LEFT OUTER JOIN Department D 
+
+ON E.Department_id=D.Department_id; 
+
+  
+
+--right outer join  - each record from R.H.S side table+ mached 
+
+select 
+
+Employeeid, firstname, lastname, manager_id, salary, job_id, department_name 
+
+From Employee E RIGHT OUTER JOIN Department D 
+
+ON E.Department_id=D.Department_id; 
+
+  
+
+--full outer join 
+
+select 
+
+Employeeid, firstname, lastname, manager_id, salary, job_id, department_name 
+
+From Employee E Full OUTER JOIN Department D 
+
+ON E.Department_id=D.Department_id; 
+
+select employeeid, firstname, manager_id from Employee; 
+
+  
+
+  
+
+--self join (inner join with itself) 
+
+select  
+
+Emp.employeeid,  
+
+Emp.firstname,  
+
+Emp.salary,  
+
+Emp.job_id, 
+
+Mgr.employeeid as Manager_id,  
+
+Mgr.firstname as managerName 
+
+from Employee Emp Join Employee Mgr 
+
+On Emp.manager_id=Mgr.Employeeid; 
+
+  
+
+  
+
+--select a.* 
+
+--from Employee a, employee b 
+
+--Where a.job_id= b.job_id 
+
+--and b.firstname='robin'; 
+
+  
+
+select * from emp; 
+
+  
+
+select * from Employee; 
+
+  
+
+--use of set operators. combining o/p of 2 queries   
+
+--output is sorted and excluded duplicates 
+
+select empid, salary from emp 
+
+union 
+
+select employeeid,salary from employee; 
+
+  
+
+--output is not sorted and duplictaes included 
+
+select empid, salary from emp 
+
+union all 
+
+select employeeid,salary from employee; 
+
+  
+
+-- only common records get displayed 
+
+select empid, salary from emp 
+
+intersect 
+
+select employeeid,salary from employee; 
+
+  
+
+--records selected by first query and not in second query 
+
+select empid, salary from emp 
+
+minus 
+
+select employeeid,salary from employee; 
+
+  
+
+--one more exapmle 
+
+select empid from emp 
+
+minus 
+
+select employeeid from employee; 
+
+  
+
+  
+
+  
+
+--TCL statements 
+
+  
+
+connect db_user1 
+
+grant select on Emp to USER1 with grant option; -- error 
+
+  
+
+desc location_dtls; 
+
+  
+
+grant select on db_user.location_dtls to db_user1; 
+
+  
+
+connect db_user1; 
+
+create table Student1(roll_no number(2) primary key, sName varchar2(20), phone_number number(10)); 
+
+desc Student1; 
+
+insert into Student1 values(1,'Rajiv',null); 
+
+insert into Student1 values(2,'Jayant',8090345678); 
+
+insert into Student1 values(3,'Rajiv',8890543710); 
+
+select * from Student1; 
+
+  
+
+connect db_user; 
+
+select * from Student1; 
+
+  
+
+select table_name from all_tables; 
+
+  
+
+-- to see which previous priviledges assigned by whoms. Grantee, Grantor & privilege 
+
+select * from user_tab_privs_made; 
+
+  
+
+  
+
+--to know which privileges recieved before this 
+
+select * from user_tab_privs_recd; 
+
+  
+
+grant select on dept to db_user1 with grant option; 
+
+  
+
+connect db_user1; 
+
+select * from db_user.dept; 
+
+  
+
+connect db_user; 
+
+  
+
+select * from user_tab_privs_recd; 
+
+select * from user_tab_privs_made; 
+
+ 
+
+ 
+
+--commit roll back exapmle 
+
+create table customer28( 
+
+cust_id number(3) primary key, 
+
+cust_name varchar2(20) not null); 
+
+  
+
+savepoint s1; 
+
+insert into customer28 values(1,'Rahul'); 
+
+insert into customer28 values(2,'satish'); 
+
+  
+
+select * from customer28; 
+
+update customer28 
+
+set cust_name='Ranjana' 
+
+where cust_id=2; 
+
+savepoint s2; 
+
+  
+
+insert into customer28 values(3,'Rutuja'); 
+
+  
+
+select * from customer28; 
+
+-- create  product table , insert 2 rows and then roll back till s2 
+
+savepoint s3; 
+
+delete from customer28 
+
+where cust_id=1; 
+
+select * from customer28; 
+
+  
+
+rollback to s2; 
+
+select * from customer28; 
+
+commit; 
+
+  
+
+  

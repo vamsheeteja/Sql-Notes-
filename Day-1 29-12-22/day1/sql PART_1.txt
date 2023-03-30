@@ -1,0 +1,499 @@
+if during the installation if O.S. is Mac or Ubuntu then can use livesql.oracle.com to execute sql query
+
+Introduction to Database System
+
+- Database - storage of data
+	    Organised Collection of Related data
+		stored on disk
+		accessible by many concurrent users
+
+- DBMS - Database management system 
+	set of programs which manages the database
+
+- RDBMS - Relational database management system
+		Dr E F Codd 1970
+		Relation - 2 D Table
+
+	- Collection of Objects/ Relations
+	- set of operators to act on those relations
+	- maintaining integrity of data
+
+
+- ERD - Entity Relationship Diagram
+
+Basic model which helps in designing the database
+
+3 components
+  -- Entity - something for which info needs to be stored
+  e.g - Customers, Suppliers, Employees, Departments, Orders, Products
+	Entity will become table in your database
+  
+  -- Attribute - something which describes the entity
+	Employee : Employeeid, name, job_profile, salary, department....
+
+  -- Relationship - Association between the entities
+
+		1 - 1
+		Employee : Adhaar_Card_dtls
+		
+		1 - M	( 1 : M , 1: 1)
+
+		University : Student
+		1	: M
+		1 	:1
+		Department : Employee
+
+
+		M - M
+
+		(1 : M
+		 M : 1)
+
+
+		Book : Author
+		1      :  M
+		M        :  1
+
+		Student : Subjects_enrolled
+		Employee : Project
+		Book : Author
+
+
+
+Constraints
+-------------
+
+rules enforced on tables to maintain integrity of data
+
+NOT NULL
+
+UNIQUE	    - 	no duplicates
+		1 table - Many Unique keys
+		may contain null values
+
+PRIMARY KEY - UNIQUE + NOT NULL      
+		1 table - 1 PK
+
+FOREIGN KEY  - Reference to the Primary key of another table / or same table as well 
+              ( to apply the relationship)
+
+- can contain null value
+- can contain duplicate value
+- can contain only the values present in primary key column or it can contain null
+
+
+CHECK		- User defined constraint
+		Join_date Date CHECK ( join_date>'01-JAN-2000' )
+		Gender varchar2(1) CHECK(gender in ('M','F'))
+
+DEFAULT     - to specify default value for a column
+
+		Join_date DATE DEFAULT '01-JAN-10'
+
+
+Implementation of relationships in database
+
+
+
+PK of One side table - Foreign key in Many side table
+
+1
+Department
+Departmentid(PK) , name ..........	
+101				
+102				
+103				
+104
+
+M
+Employee
+PK
+Emp id  name ..........	passportid (FK), Departmentid(FK)
+1	AAA		10		101
+2	Abhijeet	40		102
+3	kalyani		50		102		
+4	B		20		null
+5	C		null		null
+
+Passport (1:1 with employee- can add any one 's primary key as forign key in another table)
+PK
+passportid ,name, number .............
+10
+20
+40
+50
+60
+-----------------------------------------
+
+
+
+M
+Book
+PK
+Bookid , Book_name, ....................... , Authorid
+1				20
+2				10
+3				20
+4
+
+M
+Author
+PK
+Author_id, Aname, address ...
+10
+20
+30
+40
+60
+
+
+
+3rd table, bridge table /junction table
+
+Book_Auth -(both forign keys allowed null values both allowed duplicate values)
+Bookid (FK), Author_id(FK)
+1		10	
+2		20
+2		40
+3		40
+4		40
+
+
+Types of SQL Statements
+---------------------------
+
+DDL 	: Data Definition Language
+	CREATE
+	ALTER
+	DROP
+	TRUNCATE0
+	RENAME
+DML	: Data Manipulation Language	
+	INSERT
+	UPDATE
+	DELETE
+DCL	: Data Control Language
+	GRANT
+	REVOKE
+TCL	: Transaction Control Language
+	COMMIT
+	ROLLBACK
+	SAVEPOINT
+Data Retrieval - SELECT
+
+
+DDL statements
+------------------
+
+	-- Auto Commit
+
+
+CREATE
+
+ALTER
+       	- to add new column	ADD
+	- to modify existing column	MODIFY ( to change the size or data type of column)
+	- to remove a column	Drop column
+	- to add/remove the constraints	Add constraint, drop constraint
+	- to rename a column		rename column
+
+DROP
+	to remove the table/object from the table
+	all the data from that table will also be removed
+
+TRUNCATE
+	Truncate table table_name
+
+	to remove entire data from the table
+	structure of the table will remain
+
+RENAME
+	Rename a table or any database object
+
+	Rename old_table to new_table_name;
+
+
+
+DML statements
+
+
+- INSERT : to add records in the table
+- UPDATE : to modify the data within the data
+- DELETE : to remove records
+
+
+INSERT
+
+	INSERT INTO table_name [(column_list)]
+	VALUES (values );
+
+
+-- Substitution variable
+			&VariableName  (works as substitution)
+
+
+Common errors that can occur during execution of Insert statement
+- Mandatory value missing for a not null column
+- Duplicate value violates unique constraint
+- Foreign key constraint violated
+- check constraint violated
+- datatype mismatch
+
+
+UPDATE statement
+----------------------
+to modify the data within the table
+
+using a single update statement , user can modify multiple rows as well as   columns at a time
+
+
+Update table_name
+set col=value, col2=value2 ..... : which column value user wants to update
+[ Where condition ]		 : Which rows user wants to update
+-- as where is optional - if where in not mentioned then valu will get set for whole column
+
+DELETE
+-------
+
+to remove data from the table
+      
+DELETE from table_name
+[where condition ]
+
+
+
+TRUNCATE	- Auto Commit - DDL statements
+		  all records will be deleted in one go
+
+DELETE		- Commit/Rollback - DML statements
+		  to specify which rows user wants to delete	
+		 delete all / few rows from table
+
+Common err - Integrity constraint violated; child records found
+If any one is deleting 100 from dept ey referenced in Employee table
+then there might be above error
+dept
+deptid
+100
+200
+400
+700
+
+Employee
+empid 	deptid
+1	100
+2	400
+3	100
+
+
+
+
+SELECT statement                        
+----------------------
+
+
+	- all the sql queries are not case insensative
+	- values in the table are case sensative, format sesitive
+
+
+SELECT * / column_names
+FROM table
+
+Arithmatic oprs  + - * /
+
+Column alais
+	alternative name for existing column in the table /calculated column. should be single word
+         so use _ to join two words.
+
+ alais in " "  : to make it case sensative, to add spaces, any special characters
+
+Concatenation operator ||
+
+WHERE clause
+		to specify row level filter condition
+
+Comparison operators
+
+	Basic
+		= > < >= <= <>
+	Advance
+		IN		to compare with list of values
+		BETWEEN		to compare within range
+		LIKE		wildcard search
+				_ any single character
+				% any 0 or more characters
+
+		IS NULL
+
+
+Logical operator
+	to incoporate multiple conditions in where clause
+	AND
+	OR
+
+	to reverse the condtion
+	NOT
+
+Not in
+Not between
+not like
+is not null
+
+
+
+Sorting of data
+	ORDER BY clause
+
+ASC - ascending 	- default
+DESC - descending order
+
+
+Order by clause can contain
+		Numeric column, date column , character column 	
+
+Order by clause 
+	column name, column alais, column position
+
+Order by clause is the only clause in select statement where we can use column alais
+
+
+FUNCTIONS
+--------------
+
+ - can accept parameters
+ - can  be nested
+ - can modify the datatype
+ - can manipulate data items
+ - must return value
+
+Single row functions
+		----> 1 value ---> Function ---> 1 Value
+
+Multiple Row functions / Group , aggregate functions
+		---->
+		--->
+		---->	aggregate Function	--- 1 value
+		---->
+		---->
+		---->
+
+Single row functions
+	Character
+	Numeric
+	Date
+	Generic
+	Conversion
+
+Single row Functions
+	Character
+		Case Manipulation
+			UPPER
+			LOWER
+			INITCAP
+		Char manipulation
+			CONCAT
+			REPLACE
+			LENGTH
+			LPAD/RPAD	 h w
+			SUBSTR
+			INSTR
+			Trim		H W
+	Numeric
+			MOD
+			TRUNC     how many decimal places
+			ROUND
+	Date
+			Sysdate
+			add_months  -to add months
+			months_between  - get months bet 2 dates
+			next_day
+			last_day   -last day of particular month
+			trunc/ round	H W		
+
+	Generic
+			NVL(column,replacement_value)
+
+	if column contains null value replace it with 2nd parameter
+
+
+			NVL2(column, m , n)
+
+	if column contains null value, it will be replaced with 3rd parameter
+	does not contain null value, it will be replaced with 2nd parameter
+
+
+Conversion
+		to convert a value from one datatype to another datatype
+
+	to_char(date/number, 'Format element')
+		 - to change the display format for Date or Numeric value
+	to_date(Char,'Format element')
+	to_number(char,'Format element')
+
+ Default date format oracle 
+			DD-MON-YY
+
+Format elements for date
+
+DD : 12
+MM : 07
+YY : 22
+YYYY : 2022
+MON : Jul
+Month : July
+Day : day of the week
+th : 1st, 2nd, 6th, 3rd, 21st, 10th
+sp : spell out the date
+
+HH : Hour
+MI : Minute
+HH24 : Hour 
+SS : second
+AM/PM
+
+Format elements for number
+
+. decimal point
+, Thousand indicator
+$
+ 9 any number
+
+Multiple row functions
+------------------------
+
+--->
+--->		Function	---> 1 value
+--->
+--->
+--->
+
+AVG(n)
+SUM(n)
+MAX(expr) - can accept character, number as well as date datatype column
+MIN(expr) - can accept character, number as well as date datatype column
+COUNT(expr) - can accept character, number as well as date datatype column
+
+
+All the group functions ignore null values in the column
+
+GROUP BY Clause
+		to segregate data into multiple groups
+Having clause
+		to apply filter condition on grouped data
+
+
+
+Conditional Expressions
+----------------------------
+
+
+To incorporate if-else logic within SQL query
+
+- CASE Expression
+	Simple Case Expression
+	Searched Case Expression
+
+- DECODE Function
+			H W
+
+
